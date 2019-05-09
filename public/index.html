@@ -6,6 +6,23 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title>vue-music</title>
+    <script>
+      function init() {
+        function changeRem() {
+          let wWidth = document.documentElement.clientWidth,
+            devWidth = 375;
+          if (wWidth >= 375) {
+            document.documentElement.style.fontSize = '100px';
+            return;
+          }
+          document.documentElement.style.fontSize = wWidth / devWidth * 100 + 'px';
+        }
+        changeRem();
+        window.addEventListener('resize', changeRem);
+      }
+      init();
+  
+    </script>
   </head>
   <body>
     <noscript>
