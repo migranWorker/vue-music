@@ -6,6 +6,8 @@
                 返回
             </div>
         </div>
+        <div class="bscroll" ref="bscroll">
+            <div class="bscroll-container">
         <div class="header" :style="{backgroundImage: 'url(' + songObj.coverImgUrl + ')'}">
             <div class="header-box">
                 <div class="header-title" @click="back">
@@ -39,24 +41,35 @@
             </div>
         </div>
     </div>
+            </div>
+ </div>
 </template>
 
 <script>
+import BScroll from "better-scroll";
+
 let timer ;
 export default {
     name:'SongSheet',
     data(){
         return{
             songObj:{},
-            show:false
+            show:false,
+            aBScroll:'',
         }
     },
     created(){
         let {query} = this.$route;
-        this.$http.get(`http://localhost:3000/playlist/detail?id=${query.id}`).then(res=>{
-            this.songObj = res.data.playlist;
-            console.log(this.songObj);
-        })
+        if(query.type == 'song'){
+            this.$http.get(`/playlist/detail?id=${query.id}`).then(res=>{
+                this.songObj = res.data.playlist;
+            })
+        }else{
+            this.$http.get(`/top/list?idx=${query.id}`)
+                .then(res=>{
+                    this.songObj = res.data.playlist;
+                })
+        }
     },
     computed:{
         sum(){
@@ -81,9 +94,8 @@ export default {
         back(){
             this.$router.go(-1);
         },
-        handleScroll(){
-            let top = window.pageYOffset;
-            if(top > 150){
+        handleScroll(top){
+            if(top < -150){
                 this.show = true;
             }else{
                 this.show = false;
@@ -91,7 +103,16 @@ export default {
     },
     },
     mounted(){
-       window.addEventListener('scroll',this.handleScroll) 
+       this.$nextTick(()=>{
+            let bscrollDom = this.$refs.bscroll;
+            this.aBScroll = new BScroll(bscrollDom,{
+                probeType: 3,
+                click: true
+            });
+            this.aBScroll.on('scroll',pos=>{
+                this.handleScroll(pos.y)
+            });
+       })
     }
 }
 </script>
@@ -228,6 +249,11 @@ export default {
             text-align: center;
         }
     }
-    
+    .bscroll{
+        width: 100%;
+        overflow: hidden;
+        height:100vh;
+    }
+
 </style>
 

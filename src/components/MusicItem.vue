@@ -30,9 +30,10 @@ export default {
     methods:{
         nav(id){
             this.$router.push({
-                name:'songsheet',
+                name:'songdetail',
                 query:{
-                    id
+                    id,
+                    type:'song'
                 }
             })
         }

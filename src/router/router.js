@@ -4,6 +4,9 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 export default new Router({
+  scrollBehavior (to, from, savedPosition) {
+    return {x:0,y:0}
+  },
   routes: [
     {
       path: '/',
@@ -29,10 +32,15 @@ export default new Router({
       ]
     },
     {
-      path:'/songsheet',
-      name:'songsheet',
+      path:'/songdetail',
+      name:'songdetail',
       component:() => import('@/views/SongSheet')
-    },  
+    },
+    {
+      path:'/singerdetail',
+      name:'singerdetail',
+      component:() => import('@/views/SingerDetail')
+    },
     {
       path:'*',
       redirect:'/'

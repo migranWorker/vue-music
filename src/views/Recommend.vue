@@ -1,19 +1,26 @@
 <template>
     <div class="recommend">
-        <my-swiper :imgList='imgList'></my-swiper>
-        <my-title title="推荐歌单"></my-title>
-        <div v-for="(item,index) in items" :key="index">
-            <music-item :listOne = 'item'></music-item>
+        <div class="bscroll" ref="bscroll">
+            <div class="bscroll-container">
+                <my-swiper :imgList='imgList'></my-swiper>
+                <my-title title="推荐歌单"></my-title>
+                <div v-for="(item,index) in items" :key="index">
+                    <music-item :listOne = 'item'></music-item>
+                </div>
+                <my-title title="最新音乐"></my-title>
+                <div v-for="item in newSongList" :key='item.id'>
+                    <music-show :item='item'></music-show>
+                </div>
+                <logo-footer></logo-footer>
+                <div class="footer-item"></div>
+            </div>
         </div>
-        <my-title title="最新音乐"></my-title>
-        <div v-for="item in newSongList" :key='item.id'>
-            <music-show :item='item'></music-show>
-        </div>
-        <logo-footer></logo-footer>
     </div>
 </template>
 
 <script>
+import BScroll from "better-scroll";
+
 export default {
     name:'recommend',
     data(){
@@ -38,7 +45,8 @@ export default {
             ],
             songList:[],
             items:[],
-            newSongList:[]
+            newSongList:[],
+            aBScroll:''            
         }
     },
     computed:{
@@ -51,7 +59,7 @@ export default {
     },
     created(){
         //推荐歌单
-        this.$http.get('http://localhost:3000/personalized')
+        this.$http.get('/personalized')
                 .then(res=>{
                     let {result} = res.data;
                     this.songList = result.splice(0,6);
@@ -59,10 +67,17 @@ export default {
                     this.items.push(this.songList.slice(3))
                 })
         //最新歌曲
-        this.$http.get('http://localhost:3000/personalized/newsong')
+        this.$http.get('/personalized/newsong')
                 .then(res=>{
                     let {result} = res.data;
                     this.newSongList = result;
+                    this.$nextTick(()=>{
+                    let bscrollDom = this.$refs.bscroll;
+                    this.aBScroll = new BScroll(bscrollDom,{
+                            probeType: 3,
+                            click: true
+                        });
+                    })
                 })
     }
 }
@@ -72,5 +87,13 @@ export default {
 .recommend{
         font-size: 16px;
     }
+.bscroll{
+    width: 100%;
+    overflow: hidden;
+    height:100vh;
+}
+.footer-item{
+    height: .75rem;
+}
 </style>
 
