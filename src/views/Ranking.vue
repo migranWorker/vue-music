@@ -34,7 +34,6 @@ export default {
   },
   methods:{
     push(id){
-      console.log(id.idx);
       this.$router.push({
         name:'songdetail',
         query:{
@@ -74,7 +73,6 @@ export default {
     }
         this.$nextTick(() => {
             let bscrollDom = this.$refs.bscroll;
-            console.log(bscrollDom);
             this.aBScroll = new BScroll(bscrollDom,{
               click:true
             })

@@ -37,9 +37,9 @@ export default new Router({
       component:() => import('@/views/SongSheet')
     },
     {
-      path:'/singerdetail',
-      name:'singerdetail',
-      component:() => import('@/views/SingerDetail')
+      path:'/player',
+      name:'player',
+      component:() => import('@/views/Player')
     },
     {
       path:'*',

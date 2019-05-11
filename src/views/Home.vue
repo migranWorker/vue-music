@@ -3,7 +3,9 @@
     <my-header></my-header>
     <nav-bar></nav-bar>
     <div class="body">
-      <router-view></router-view>
+      <keep-alive>
+        <router-view></router-view>
+      </keep-alive>
     </div>
   </div>
 </template>

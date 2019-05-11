@@ -65,9 +65,10 @@ export default {
         },
         goto(id){
             this.$router.push({
-                name:'singerdetail',
+                name:'songdetail',
                 query:{
-                    id
+                    id,
+                    type:'singer'
                 }
             })
         }

@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import VueLazyload from 'vue-lazyload'
 import router from './router/router'
+import store from './store/store'
 import axios from 'axios'
 import MyHeader from '@/components/MyHeader.vue'
 import NavBar from '@/components/NavBar.vue'
@@ -48,5 +49,6 @@ Vue.component(IndexList.name,IndexList)
 
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')

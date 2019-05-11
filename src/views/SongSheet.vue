@@ -3,19 +3,19 @@
         <div class="back" v-show="show">
             <div class="back-box" >
                 <span @click="back"> < </span>
-                返回
+                {{backName}}
             </div>
         </div>
         <div class="bscroll" ref="bscroll">
             <div class="bscroll-container">
-        <div class="header" :style="{backgroundImage: 'url(' + songObj.coverImgUrl + ')'}">
+        <div class="header" :style="{backgroundImage: 'url(' + img  + ')'}">
             <div class="header-box">
                 <div class="header-title" @click="back">
                      返回
                 </div>
                 <div class="header-bottom">
-                    <p>{{songObj.name}}</p>
-                    <p> <i></i> {{songObj.playCount | numChange}}万</p>
+                    <p>{{ singerObj.artist.name ||songObj.name}}</p>
+                    <p v-if="isShow"> <i></i> {{songObj.playCount | numChange}}万</p>
                 </div>
             </div>
         </div>
@@ -29,12 +29,13 @@
             </span>
         </div>
         <div class="list" 
-            v-for="(item,index) in songObj.tracks"
+            v-for="(item,index) in (singerObj.hotSongs || songObj.tracks)"
             :key='item.id'
+            @click="play(index)"
         >
             <span>{{index + 1}}</span>
             <div class="list-content">
-                <p>{{item.name}}</p>
+                <p>{{item.al.name || item.name}}</p>
                 <p>
                     {{singer(item.ar)}}
                 </p>
@@ -47,7 +48,7 @@
 
 <script>
 import BScroll from "better-scroll";
-
+import {mapActions} from 'vuex'
 let timer ;
 export default {
     name:'SongSheet',
@@ -56,6 +57,11 @@ export default {
             songObj:{},
             show:false,
             aBScroll:'',
+            singerObj:{
+                artist:{},
+                al:{}
+            },
+            isShow:true
         }
     },
     created(){
@@ -63,20 +69,42 @@ export default {
         if(query.type == 'song'){
             this.$http.get(`/playlist/detail?id=${query.id}`).then(res=>{
                 this.songObj = res.data.playlist;
+                this.isShow = true;
             })
-        }else{
+        }else if(query.type == 'ranking'){
             this.$http.get(`/top/list?idx=${query.id}`)
                 .then(res=>{
                     this.songObj = res.data.playlist;
+                    this.isShow = true;
+                })
+        }else{
+            this.$http.get(`/artists?id=${query.id}`)
+                .then(res=>{
+                    console.log(res);
+                    this.singerObj = res.data;
+                    this.isShow = false;
                 })
         }
     },
     computed:{
         sum(){
-            if(this.songObj.tracks == undefined){
-                return 0;
+            if(this.songObj.tracks === undefined){
+                if(this.singerObj.hotSongs == undefined){
+                    return 0;
+                }
+                return this.singerObj.hotSongs.length;
+            }else{
+                if(this.songObj.tracks == undefined){
+                    return 0;
+                }
+                return this.songObj.tracks.length;
             }
-            return this.songObj.tracks.length;
+        },
+        img(){
+            return this.singerObj.artist.img1v1Url || this.songObj.coverImgUrl;
+        },
+        backName(){
+            return this.singerObj.artist.name || '返回';
         }
     },
     methods:{
@@ -99,8 +127,23 @@ export default {
                 this.show = true;
             }else{
                 this.show = false;
-        }
-    },
+            }
+        },
+        play(idx){
+            let songList = this.songObj.tracks || this.singerObj.hotSongs,
+                currentIndex = idx,
+                modeList = songList,
+                play = true;
+            let obj = {
+                songList,
+                currentIndex,
+                modeList,
+                play
+            }
+            this.com_play(obj);
+            this.$router.push({"name":'player'});
+        },
+        ...mapActions(['com_play'])
     },
     mounted(){
        this.$nextTick(()=>{

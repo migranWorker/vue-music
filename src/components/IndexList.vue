@@ -27,9 +27,6 @@ export default {
         goTo(idx){
            this.$emit('send',idx);
         }
-    },
-    created(){
-        console.log(this.currentIndex);
     }
 }
 </script>
