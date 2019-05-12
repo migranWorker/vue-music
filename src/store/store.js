@@ -58,6 +58,7 @@ export default new Vuex.Store({
             commit('set_songList',obj.songList);
             commit('set_modeList',obj.modeList);
             commit('set_currentIndex',obj.currentIndex);
+            commit('set_playScreen',obj.playScreen);
         }
     }
 })

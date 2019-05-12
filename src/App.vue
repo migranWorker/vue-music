@@ -1,10 +1,20 @@
 <template>
   <div id="app">
     <transition name="fade" mode="out-in">
-      <router-view/>
+        <router-view/>
     </transition>
+    <Player />
   </div>
 </template>
+<script>
+import Player from '@/views/Player.vue'
+export default {
+  name:'App',
+  components:{
+    Player
+  }
+}
+</script>
 
 <style lang="less">
   #app{

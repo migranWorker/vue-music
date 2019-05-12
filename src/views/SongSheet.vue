@@ -42,7 +42,7 @@
             </div>
         </div>
     </div>
-            </div>
+    </div>
  </div>
 </template>
 
@@ -133,15 +133,17 @@ export default {
             let songList = this.songObj.tracks || this.singerObj.hotSongs,
                 currentIndex = idx,
                 modeList = songList,
-                play = true;
+                play = true,
+                playScreen=true;
             let obj = {
                 songList,
                 currentIndex,
                 modeList,
-                play
+                play,
+                playScreen
             }
             this.com_play(obj);
-            this.$router.push({"name":'player'});
+            // this.$router.push({"name":'player'});
         },
         ...mapActions(['com_play'])
     },
