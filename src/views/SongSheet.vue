@@ -80,7 +80,6 @@ export default {
         }else{
             this.$http.get(`/artists?id=${query.id}`)
                 .then(res=>{
-                    console.log(res);
                     this.singerObj = res.data;
                     this.isShow = false;
                 })
@@ -143,7 +142,6 @@ export default {
                 playScreen
             }
             this.com_play(obj);
-            // this.$router.push({"name":'player'});
         },
         ...mapActions(['com_play'])
     },
@@ -284,7 +282,7 @@ export default {
         left:0;
         z-index: 4;
         .back-box{
-            max-width: 150px;
+            min-width: 150px;
         }
         span{
             display: inline-block;

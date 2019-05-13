@@ -15,6 +15,7 @@ import MusicShow from '@/components/MusicShow.vue'
 import LogoFooter from '@/components/LogoFooter.vue'
 import SingerItem from '@/components/SingerItem.vue'
 import IndexList from '@/components/IndexList.vue'
+import MyProgress from '@/components/Progress.vue'
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
@@ -46,6 +47,7 @@ Vue.component(MusicShow.name,MusicShow)
 Vue.component(LogoFooter.name,LogoFooter)
 Vue.component(SingerItem.name,SingerItem)
 Vue.component(IndexList.name,IndexList)
+Vue.component('MyProgress',MyProgress)
 
 new Vue({
   router,

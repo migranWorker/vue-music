@@ -8,7 +8,11 @@
                     <music-item :listOne = 'item'></music-item>
                 </div>
                 <my-title title="最新音乐"></my-title>
-                <div v-for="item in newSongList" :key='item.id'>
+                <div 
+                    v-for="(item,index) in newSongList" 
+                    :key='item.id'
+                    @click="play(index)"
+                >
                     <music-show :item='item'></music-show>
                 </div>
                 <logo-footer></logo-footer>
@@ -20,7 +24,7 @@
 
 <script>
 import BScroll from "better-scroll";
-
+import {mapActions} from 'vuex'
 export default {
     name:'recommend',
     data(){
@@ -46,7 +50,8 @@ export default {
             songList:[],
             items:[],
             newSongList:[],
-            aBScroll:''            
+            aBScroll:''  ,
+
         }
     },
     computed:{
@@ -60,25 +65,56 @@ export default {
     created(){
         //推荐歌单
         this.$http.get('/personalized')
-                .then(res=>{
-                    let {result} = res.data;
-                    this.songList = result.splice(0,6);
-                    this.items.push(this.songList.slice(0,3));
-                    this.items.push(this.songList.slice(3))
-                })
+            .then(res=>{
+                let {result} = res.data;
+                this.songList = result.splice(0,6);
+                this.items.push(this.songList.slice(0,3));
+                this.items.push(this.songList.slice(3))
+            })
         //最新歌曲
         this.$http.get('/personalized/newsong')
-                .then(res=>{
-                    let {result} = res.data;
-                    this.newSongList = result;
-                    this.$nextTick(()=>{
-                    let bscrollDom = this.$refs.bscroll;
-                    this.aBScroll = new BScroll(bscrollDom,{
-                            probeType: 3,
-                            click: true
-                        });
-                    })
+            .then(res=>{
+                let {result} = res.data;
+                this.newSongList = result;
+                this.$nextTick(()=>{
+                let bscrollDom = this.$refs.bscroll;
+                this.aBScroll = new BScroll(bscrollDom,{
+                        probeType: 3,
+                        click: true
+                    });
                 })
+            })
+    },
+    methods:{
+         play(idx){
+             let arr = [];
+             this.newSongList.forEach(item=>{
+                 let obj = {
+                     name:item.name,
+                     id:item.id,
+                     al:{
+                         picUrl : item.song.album.picUrl
+                     },
+                     ar:[{name:item.song.album.artists[0].name}],
+                     dt:item.song.bMusic.playTime
+                 }
+                 arr.push(obj);
+             })
+            let songList = arr,
+                currentIndex = idx,
+                modeList = songList,
+                play = true,
+                playScreen=true;
+            let obj = {
+                songList,
+                currentIndex,
+                modeList,
+                play,
+                playScreen
+            }
+            this.com_play(obj);
+        },
+        ...mapActions(['com_play'])
     }
 }
 </script>
