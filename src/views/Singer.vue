@@ -1,5 +1,6 @@
 <template>
     <div class="singer">
+        <loading v-show="loadingShow" />
         <div class="bscroll" ref="bscroll">
             <div class="bscroll-container">
                 <div>
@@ -29,7 +30,8 @@ export default {
             aBScroll:'',
             scrollY:'',
             singerHeight:[],
-            currentIndex:0
+            currentIndex:0,
+            loadingShow:true
         }
     },
     watch:{
@@ -75,17 +77,18 @@ export default {
     },
     created(){
         let letters = ['A','B','C','E','F','G','H','I','J','L','M','N','O','P','R','S','T','V','W','X','Y','Z'];
-
         this.$http.get('/top/artists?offset=0&limit=10')
         .then(res=>{
             this.$set(this.singerList , '热门' ,res.data.artists );
         })
 
+        let num = 0;
         letters.forEach(item=>{
             this.$http.get(`/artist/list?limit=60&initial=${item}`)
             .then(res=>{
                 let ran = Math.round(Math.random()*10 + 10);
                 this.$set(this.singerList , item ,res.data.artists.slice(0,ran) );
+                num ++;
             })
         })
     },
@@ -102,6 +105,7 @@ export default {
         }),
         setTimeout(()=>{
             this.computedHeight();
+            this.loadingShow = false;
         },1000)
     }
 }

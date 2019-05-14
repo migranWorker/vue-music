@@ -21,23 +21,33 @@ export default {
     max-width: 450px;
     width: 100%;
     margin:0 auto;
-    .fade-enter-active, .fade-leave-active {
+    .fade-enter-active, .fade-leave-active,
+     {
       transition: opacity .3s;
     }
-    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ ,
+    .down-enter, .down-leave-to
+    {
       opacity: 0;
+    }
+    .down-enter-active, .down-leave-active{
+      transition:  opacity 1s;
     }
 
-    .slide-fade-enter-active {
-        transition: all .3s ease;
-    }
-    .slide-fade-leave-active {
-      transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-    }
-    .slide-fade-enter, .slide-fade-leave-to
-    /* .slide-fade-leave-active for below version 2.1.8 */ {
-      transform: translateX(10px);
-      opacity: 0;
-    }
+
+
+.no-mode-translate-fade-enter-active ,.no-mode-translate-in-enter-active{
+  transition: all 1s;
+}
+
+.no-mode-translate-fade-enter, .no-mode-translate-fade-leave-active {
+  opacity: 0;
+}
+.no-mode-translate-fade-enter {
+  transform: translateX(150px);
+}
+.no-mode-translate-fade-leave-active {
+  transform: translateX(-250px);
+}
   }
 </style>

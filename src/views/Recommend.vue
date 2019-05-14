@@ -1,5 +1,6 @@
 <template>
     <div class="recommend">
+        <loading v-show="loadingShow" />
         <div class="bscroll" ref="bscroll">
             <div class="bscroll-container">
                 <my-swiper :imgList='imgList'></my-swiper>
@@ -25,6 +26,7 @@
 <script>
 import BScroll from "better-scroll";
 import {mapActions} from 'vuex'
+import { setTimeout } from 'timers';
 export default {
     name:'recommend',
     data(){
@@ -51,7 +53,7 @@ export default {
             items:[],
             newSongList:[],
             aBScroll:''  ,
-
+            loadingShow:true
         }
     },
     computed:{
@@ -83,6 +85,9 @@ export default {
                         click: true
                     });
                 })
+                setTimeout(()=>{
+                    this.loadingShow = false;
+                },100)
             })
     },
     methods:{
@@ -100,17 +105,12 @@ export default {
                  }
                  arr.push(obj);
              })
-            let songList = arr,
-                currentIndex = idx,
-                modeList = songList,
-                play = true,
-                playScreen=true;
             let obj = {
-                songList,
-                currentIndex,
-                modeList,
-                play,
-                playScreen
+                songList:arr,
+                currentIndex:idx,
+                modeList:arr,
+                play:true,
+                playScreen:true
             }
             this.com_play(obj);
         },

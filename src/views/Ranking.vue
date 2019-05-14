@@ -1,5 +1,6 @@
 <template>
     <div class="ranking">
+      <loading v-show="loadingShow" />
         <div class="bscroll" ref="bscroll">
             <div class="bscroll-container">
                 <div 
@@ -30,6 +31,7 @@ export default {
     return {
       topList: [],
       aBScroll: "",
+      loadingShow:true
     };
   },
   methods:{
@@ -69,15 +71,19 @@ export default {
                 let newArr = res.data.playlist.tracks.slice(0,3);
                 this.$set(this.topList[i],'songList',newArr);
             })
+        setTimeout(()=>{
+          this.loadingShow = false;
+        },200)
       }
+    
     }
-        this.$nextTick(() => {
-            let bscrollDom = this.$refs.bscroll;
-            this.aBScroll = new BScroll(bscrollDom,{
-              click:true
-            })
-        });
-    });
+      this.$nextTick(() => {
+          let bscrollDom = this.$refs.bscroll;
+          this.aBScroll = new BScroll(bscrollDom,{
+            click:true
+          })
+      });
+    })
   }
 };
 </script>

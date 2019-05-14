@@ -16,6 +16,7 @@ import LogoFooter from '@/components/LogoFooter.vue'
 import SingerItem from '@/components/SingerItem.vue'
 import IndexList from '@/components/IndexList.vue'
 import MyProgress from '@/components/Progress.vue'
+import Loading from '@/components/Loading.vue'
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
@@ -48,6 +49,7 @@ Vue.component(LogoFooter.name,LogoFooter)
 Vue.component(SingerItem.name,SingerItem)
 Vue.component(IndexList.name,IndexList)
 Vue.component('MyProgress',MyProgress)
+Vue.component(Loading.name,Loading)
 
 new Vue({
   router,

@@ -1,5 +1,6 @@
 <template>
-    <div class="songsheet">
+    <div class="songsheet"> 
+        <loading v-show="loadingShow" />
         <div class="back" v-show="show">
             <div class="back-box" >
                 <span @click="back"> < </span>
@@ -49,6 +50,7 @@
 <script>
 import BScroll from "better-scroll";
 import {mapActions} from 'vuex'
+import { setTimeout } from 'timers';
 let timer ;
 export default {
     name:'SongSheet',
@@ -61,26 +63,29 @@ export default {
                 artist:{},
                 al:{}
             },
-            isShow:true
+            isShow:true,
+            loadingShow:true
         }
     },
     created(){
         let {query} = this.$route;
         if(query.type == 'song'){
-            this.$http.get(`/playlist/detail?id=${query.id}`).then(res=>{
-                this.songObj = res.data.playlist;
-                this.isShow = true;
-            })
-        }else if(query.type == 'ranking'){
+            this.$http.get(`/playlist/detail?id=${query.id}`)
+                .then(res=>{
+                    this.songObj = res.data.playlist;
+                    this.changeLoadingShow();
+                })
+        }else if(query.type == 'ranking'){;
             this.$http.get(`/top/list?idx=${query.id}`)
                 .then(res=>{
                     this.songObj = res.data.playlist;
-                    this.isShow = true;
+                    this.changeLoadingShow();                    
                 })
         }else{
             this.$http.get(`/artists?id=${query.id}`)
                 .then(res=>{
                     this.singerObj = res.data;
+                    this.changeLoadingShow();                    
                     this.isShow = false;
                 })
         }
@@ -129,19 +134,18 @@ export default {
             }
         },
         play(idx){
-            let songList = this.songObj.tracks || this.singerObj.hotSongs,
-                currentIndex = idx,
-                modeList = songList,
-                play = true,
-                playScreen=true;
             let obj = {
-                songList,
-                currentIndex,
-                modeList,
-                play,
-                playScreen
+                songList : this.songObj.tracks || this.singerObj.hotSongs,
+                currentIndex : idx,
+                modeList : this.songObj.tracks || this.singerObj.hotSongs,
+                play : true,
+                playScreen : true
             }
             this.com_play(obj);
+        },
+        changeLoadingShow(){
+            this.isShow = true;
+            this.loadingShow = false;
         },
         ...mapActions(['com_play'])
     },

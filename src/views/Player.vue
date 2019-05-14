@@ -1,5 +1,6 @@
 <template>
     <div class="player" v-show="get_songList.length > 0">
+        <transition name="down" mode="out-in">
         <div class="container" v-show="get_playScreen">
             <div >
                 <div class="bg">
@@ -13,14 +14,14 @@
                     </div>
                 </div>
                 <div class="turntable" @click="changeShow">
-                    <transition name="slide-fade" mode="out-in">
+                    <transition :name="cart" >
                         <div class="turntable-box" v-show="isShow">
                             <div class="turntable-box1 " :class="['rotate',get_play ? '' : 'pause']" >
                                 <img :src="img()" :key="get_currentIndex" alt="">
                             </div>
                         </div>
                     </transition>
-                    <transition name="slide-fade" mode="out-in">
+                    <transition :name="cart" >
                         <div class="lyric" v-show="!isShow" ref="lyric">
                             <div class="bscroll" ref="bscroll">
                                 <div class="bscroll-container">
@@ -50,8 +51,8 @@
                         </my-progress>
                     </div>
                     <div class="btns">
-                        <div>
-                            <img src="@/assets/img/loop.png" alt="">
+                        <div @click="changeMode">
+                            <img :src="modeSrc" alt="">
                         </div>
                         <div @click="prev">
                             <img src="@/assets/img/preve.png" alt="">
@@ -62,13 +63,14 @@
                         <div @click='next'>
                             <img src="@/assets/img/next.png" alt="">
                         </div>
-                        <div>
-                            <img src="@/assets/img/collection.png" alt="">
+                        <div @click="like">
+                            <img :src="likeSrc" alt="">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        </transition>
         <div class="mini-player" v-show="!get_playScreen" @click="changePlayScreen">
             <div class="box" :class="['rotate',get_play ? '' : 'pause']" >
                 <img :src="img()" alt="">
@@ -83,7 +85,7 @@
                 </div>
             </div>
         </div>
-        <audio ref = 'audio' :src="src" :key="get_currentIndex" @timeupdate="updataTime"></audio>
+        <audio ref ='audio' :src="src" :key="get_currentIndex" @timeupdate="updataTime"></audio>
     </div>
 </template>
 
@@ -106,6 +108,8 @@ export default {
             isShow:true,
             currentLineNum:'',
             aBScroll:'',
+            cart:'no-mode-translate-fade',
+            isLike:'',
             publicPath: process.env.BASE_URL
         }
     },
@@ -114,6 +118,7 @@ export default {
             if(this.lyric){
                 this.lyric.stop();
             }
+            this.isLike = false;
             this.$nextTick(()=>{
                 this.$refs.audio.play();
                 this.getLyric();
@@ -137,7 +142,20 @@ export default {
         },
         rate(newVal){
             if(newVal > 100){
-                this.next();
+                if(this.get_mode){
+                    let index = this.get_currentIndex;
+                    this.$store.commit('set_play',true);
+                    this.$store.commit('set_currentIndex', index);
+                    this.$nextTick(()=>{
+                        this.$refs.audio.play();
+                        this.getLyric();
+                         if(this.lyric){
+                            this.lyric.seek(0);
+                        }
+                    })
+                }else{
+                    this.next();
+                }
             }
         }
     },
@@ -166,10 +184,13 @@ export default {
         },
         stopImg(){
             if(this.get_playScreen){
-                return  this['get_play'] ? `${this.publicPath}stop.png` : `${this.publicPath}start.png`
+                return  this['get_play'] ? `${this.publicPath}img/stop.png` : `${this.publicPath}img/start.png`
             }else{
-                return  this['get_play'] ? `${this.publicPath}stop1.png` : `${this.publicPath}start1.png`
+                return  this['get_play'] ? `${this.publicPath}img/stop1.png` : `${this.publicPath}img/start1.png`
             }
+        },
+        likeSrc(){
+            return  this.isLike ? `${this.publicPath}img/red.png` : `${this.publicPath}img/collection.png`
         },
         singer(){
             let ar = this['get_songList'][this['get_currentIndex']];
@@ -186,6 +207,9 @@ export default {
                 }
             });
             return str;
+        },
+        modeSrc(){
+            return this['get_mode'] ? `${this.publicPath}img/loopOne.png` : `${this.publicPath}img/loopAll.png`
         },
         ...mapGetters([
             'get_currentIndex',
@@ -277,8 +301,18 @@ export default {
                 this.aBScroll.scrollTo(0,0,1000);
             }
         },
-        changeShow(){
-             this.isShow = !this.isShow;
+        changeShow(e){
+            this.isShow = !this.isShow;
+        },
+        like(){
+            this.isLike = !this.isLike;
+        },  
+        changeMode(){
+            if(this['get_mode']){
+                this.$store.commit('set_mode',0);
+            }else{
+                this.$store.commit('set_mode',1);
+            }
         },
         format(timer,num){
             let now = Math.floor(timer/num);
@@ -349,6 +383,15 @@ export default {
                         text-overflow: ellipsis;
                         overflow: hidden;
                         white-space: nowrap;
+                        animation: cart .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+                    }
+                    @keyframes cart {
+                        from{
+                            transform: translateY(20px)
+                        }
+                        to{
+                            transform: translateY(0px)
+                        }
                     }
                     h2{
                         width: 100%;
@@ -356,6 +399,7 @@ export default {
                         text-align: center;
                         line-height: .2rem;
                         font-size: 12px;
+                        animation: cart .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
                     }
                 }
             }

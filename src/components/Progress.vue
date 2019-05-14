@@ -1,5 +1,5 @@
 <template>
-    <div class="progress"  >
+    <div class="progress"  v-cloak>
         <div class="left">
             {{nowTime}}
         </div>
@@ -34,6 +34,7 @@ export default {
         display: flex;
         align-items: center;
         color: #000;
+        min-height: .12rem;
         .left , .right{
             text-align: center;
             font-size: 12px;
@@ -57,6 +58,9 @@ export default {
                 }
             }
         }
+    }
+    [v-cloak]{
+        display: none !important;
     }
 </style>
 
