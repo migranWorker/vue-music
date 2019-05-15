@@ -82,15 +82,11 @@ export default {
         .then(res=>{
             this.$set(this.singerList , '热门' ,res.data.artists );
         })
-
-        let num = 0;
         letters.forEach(item=>{
             this.$http.get(`/artist/list?limit=60&initial=${item}`)
             .then(res=>{
                 let ran = Math.round(Math.random()*10 + 10);
                 this.$set(this.singerList , item ,res.data.artists.slice(0,ran) );
-                num ++;
-                console.log(num);
             })
         })
         

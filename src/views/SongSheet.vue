@@ -74,16 +74,12 @@ export default {
                 .then(res=>{
                     this.songObj = res.data.playlist;
                     this.changeLoadingShow();
-            console.log(this.songObj);
-
                 })
         }else if(query.type == 'ranking'){;
             this.$http.get(`/top/list?idx=${query.id}`)
                 .then(res=>{
                     this.songObj = res.data.playlist;
-                    this.changeLoadingShow();            
-            console.log(this.songObj);
-
+                    this.changeLoadingShow();  
                 })
         }else{
             this.$http.get(`/artists?id=${query.id}`)
@@ -91,8 +87,6 @@ export default {
                     this.singerObj = res.data;
                     this.changeLoadingShow();                    
                     this.isShow = false;
-            console.log(this.singerObj);
-
                 })
         }
     },
