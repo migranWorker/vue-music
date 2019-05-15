@@ -11,8 +11,8 @@
                     >
                     <img v-lazy="item.coverImgUrl" alt="">
                     <ul>
-                        <li v-for="(it,i) in item.songList" :key="i">
-                          <span><i>{{i}} . </i> {{it.al.name}} - {{it.ar[0].name}}</span> 
+                        <li v-for="(it,i) in item.songList" :key="it.id">
+                          <span ><i>{{i}} . </i> {{it.al.name}} - {{it.ar[0].name}}</span> 
                         </li>
                     </ul>
                 </div>

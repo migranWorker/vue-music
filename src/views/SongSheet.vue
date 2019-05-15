@@ -20,7 +20,7 @@
                 </div>
             </div>
         </div>
-        <div class="song-sum">
+        <div class="song-sum" @click="play()">
             <span>
                 <i></i>
             </span>
@@ -36,7 +36,7 @@
         >
             <span>{{index + 1}}</span>
             <div class="list-content">
-                <p>{{item.al.name || item.name}}</p>
+                <p>{{item.name || item.name}}</p>
                 <p>
                     {{singer(item.ar)}}
                 </p>
@@ -74,12 +74,16 @@ export default {
                 .then(res=>{
                     this.songObj = res.data.playlist;
                     this.changeLoadingShow();
+            console.log(this.songObj);
+
                 })
         }else if(query.type == 'ranking'){;
             this.$http.get(`/top/list?idx=${query.id}`)
                 .then(res=>{
                     this.songObj = res.data.playlist;
-                    this.changeLoadingShow();                    
+                    this.changeLoadingShow();            
+            console.log(this.songObj);
+
                 })
         }else{
             this.$http.get(`/artists?id=${query.id}`)
@@ -87,6 +91,8 @@ export default {
                     this.singerObj = res.data;
                     this.changeLoadingShow();                    
                     this.isShow = false;
+            console.log(this.singerObj);
+
                 })
         }
     },
@@ -133,7 +139,7 @@ export default {
                 this.show = false;
             }
         },
-        play(idx){
+        play(idx=0){
             let obj = {
                 songList : this.songObj.tracks || this.singerObj.hotSongs,
                 currentIndex : idx,

@@ -129,7 +129,7 @@ export default {
     height:100vh;
 }
 .footer-item{
-    height: .75rem;
-}
+      height: .75rem !important;
+    }
 </style>
 

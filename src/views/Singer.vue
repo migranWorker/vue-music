@@ -49,6 +49,7 @@ export default {
                     return
                 }
             }
+            if(!this.listHeight){return};
             this.currentIndex = this.listHeight.length ;
         }
     },
@@ -89,8 +90,10 @@ export default {
                 let ran = Math.round(Math.random()*10 + 10);
                 this.$set(this.singerList , item ,res.data.artists.slice(0,ran) );
                 num ++;
+                console.log(num);
             })
         })
+        
     },
     mounted(){
         this.$nextTick(()=>{

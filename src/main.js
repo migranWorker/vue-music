@@ -20,13 +20,13 @@ import Loading from '@/components/Loading.vue'
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
-axios.defaults.baseURL = 'http://localhost:3000'
+axios.defaults.baseURL = 'http://139.199.64.35:3001'
 
 //懒加载
 Vue.use(VueLazyload,{
   preLoad: 1.3,
   error: '',
-  loading: '@/../touxiang.png',
+  loading: '@/../img/touxiang.png',
   attempt: 1
 })
 
